@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXORA • Student OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary: 234 179 8;
+        }
+        
+        .dark {
+            --primary: 245 158 11;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+        }
+        
+        .card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+        }
+        
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link.active {
+            background: rgb(234 179 8 / 0.1);
+            color: rgb(234 179 8);
+            border-left: 4px solid rgb(234 179 8);
+        }
+        
+        .timeline-dot {
+            animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        
+        @keyframes ping {
+            75%, 100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        .stat-card {
+            background: linear-gradient(145deg, #1f2937, #111827);
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- SIDEBAR -->
+        <div class="w-72 bg-zinc-900 border-r border-zinc-800 flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 border-b border-zinc-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-yellow-500 rounded-2xl flex items-center justify-center text-zinc-950 font-bold text-2xl shadow-inner">N</div>
+                    <div>
+                        <span class="text-3xl font-bold tracking-tighter">NEXORA</span>
+                    </div>
+                </div>
+                <p class="text-xs text-zinc-500 mt-1">STUDENT OS v1.0</p>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+                <a onclick="navigateTo('dashboard')" class="nav-link active flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium cursor-pointer">
+                    <i class="fa-solid fa-house w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a onclick="navigateTo('finance')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium cursor-pointer">
+                    <i class="fa-solid fa-wallet w-5"></i>
+                    <span>Finance</span>
+                </a>
+                <a onclick="navigateTo('attendance')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium cursor-pointer">
+                    <i class="fa-solid fa-chalkboard-user w-5"></i>
+                    <span>Attendance</span>
+                </a>
+                <a onclick="navigateTo('tasks')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium cursor-pointer">
+                    <i class="fa-solid fa-list-check w-5"></i>
+                    <span>Tasks</span>
+                </a>
+                <a onclick="navigateTo('calendar')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium cursor-pointer">
+                    <i class="fa-solid fa-calendar w-5"></i>
+                    <span>Calendar</span>
+                </a>
+                <a onclick="navigateTo('analytics')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium cursor-pointer">
+                    <i class="fa-solid fa-chart-pie w-5"></i>
+                    <span>Analytics</span>
+                </a>
+                <a onclick="navigateTo('goals')" class="nav-link flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium cursor-pointer">
+                    <i class="fa-solid fa-target w-5"></i>
+                    <span>Goals</span>
+                </a>
+            </nav>
+            
+            <!-- Bottom nav for mobile -->
+            <div class="md:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 p-2 flex justify-around text-xs">
+                <div onclick="navigateTo('dashboard')" class="flex flex-col items-center text-yellow-400">
+                    <i class="fa-solid fa-house text-lg"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div onclick="navigateTo('finance')" class="flex flex-col items-center">
+                    <i class="fa-solid fa-wallet text-lg"></i>
+                    <span>Finance</span>
+                </div>
+                <div onclick="navigateTo('tasks')" class="flex flex-col items-center">
+                    <i class="fa-solid fa-list-check text-lg"></i>
+                    <span>Tasks</span>
+                </div>
+            </div>
+            
+            <!-- User section -->
+            <div class="p-4 border-t border-zinc-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-2xl flex items-center justify-center text-zinc-950 font-bold">A</div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-sm">Priyansh Chouhan</div>
+                        <div class="text-xs text-zinc-500">Computer Science • 4th Sem</div>
+                    </div>
+                    <button onclick="toggleProfileMenu()" class="w-8 h-8 rounded-2xl hover:bg-zinc-800 flex items-center justify-center">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Topbar -->
+            <div class="h-16 bg-zinc-900 border-b border-zinc-800 px-6 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div onclick="toggleSidebar()" class="md:hidden cursor-pointer">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </div>
+                    <div class="relative w-80">
+                        <input id="global-search" 
+                               onkeyup="if(event.key === 'Enter') performGlobalSearch()"
+                               type="text" 
+                               placeholder="Search tasks, expenses, subjects..." 
+                               class="w-full bg-zinc-800 border border-zinc-700 focus:border-yellow-400 rounded-3xl py-2.5 pl-10 text-sm outline-none">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-3 text-zinc-500"></i>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-6">
+                    <!-- Daily score -->
+                    <div class="flex items-center gap-2">
+                        <div class="text-xs font-medium text-emerald-400">DAILY SCORE</div>
+                        <div id="daily-score" class="w-14 h-14 rounded-2xl bg-zinc-800 flex items-center justify-center text-3xl font-bold shadow-inner">82</div>
+                    </div>
+                    
+                    <!-- Notifications -->
+                    <div onclick="showNotifications()" class="relative cursor-pointer">
+                        <i class="fa-solid fa-bell text-xl"></i>
+                        <div id="notification-dot" class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-[10px]">3</div>
+                    </div>
+                    
+                    <!-- Quick add -->
+                    <button onclick="quickAddTask()" 
+                            class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 transition-colors text-zinc-950 font-semibold px-5 h-10 rounded-3xl text-sm">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>New Task</span>
+                    </button>
+                    
+                    <!-- User avatar -->
+                    <div class="w-8 h-8 bg-zinc-700 rounded-2xl flex items-center justify-center cursor-pointer">
+                        <i class="fa-solid fa-user text-sm"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page content -->
+            <div class="flex-1 overflow-auto p-6" id="main-content">
+                <!-- DASHBOARD VIEW -->
+                <div id="view-dashboard">
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <div class="text-4xl font-semibold tracking-tighter">Good morning, Priyansh 👋</div>
+                            <div class="text-zinc-400 mt-1">Here's what's happening today</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs uppercase tracking-widest text-zinc-500">Today</div>
+                            <div id="today-date" class="text-2xl font-mono font-bold">15</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Task stat -->
+                        <div class="stat-card rounded-3xl p-5 card">
+                            <div class="flex justify-between">
+                                <div>
+                                    <div class="text-emerald-400 text-sm font-medium">TASKS</div>
+                                    <div id="task-count" class="text-4xl font-bold mt-2">7</div>
+                                </div>
+                                <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center">
+                                    <i class="fa-solid fa-list-check text-emerald-400 text-3xl"></i>
+                                </div>
+                            </div>
+                            <div class="mt-6 flex items-center gap-2 text-xs">
+                                <div class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-3xl">3 completed</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Attendance stat -->
+                        <div class="stat-card rounded-3xl p-5 card">
+                            <div class="flex justify-between">
+                                <div>
+                                    <div class="text-blue-400 text-sm font-medium">ATTENDANCE</div>
+                                    <div id="attendance-percent" class="text-4xl font-bold mt-2">84%</div>
+                                    <div class="text-xs text-zinc-400">CS101 • 7/8</div>
+                                </div>
+                                <div class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center">
+                                    <i class="fa-solid fa-chalkboard-user text-blue-400 text-3xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Spending stat -->
+                        <div class="stat-card rounded-3xl p-5 card">
+                            <div class="flex justify-between">
+                                <div>
+                                    <div class="text-amber-400 text-sm font-medium">TODAY'S SPEND</div>
+                                    <div class="text-4xl font-bold mt-2 text-amber-400">₹248</div>
+                                </div>
+                                <div class="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center">
+                                    <i class="fa-solid fa-wallet text-amber-400 text-3xl"></i>
+                                </div>
+                            </div>
+                            <div class="mt-6 text-xs">₹752 left this month</div>
+                        </div>
+                        
+                        <!-- Focus -->
+                        <div class="stat-card rounded-3xl p-5 card bg-gradient-to-br from-violet-500 to-fuchsia-600">
+                            <div class="flex justify-between">
+                                <div>
+                                    <div class="uppercase text-xs tracking-widest opacity-75">Focus for today</div>
+                                    <div id="focus-task" class="font-semibold mt-3 leading-tight">Complete Physics assignment</div>
+                                </div>
+                                <div class="text-5xl">📚</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick insights -->
+                    <div class="mt-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="font-semibold">NEXORA INTELLIGENCE</div>
+                            <div onclick="refreshInsights()" class="text-xs text-yellow-400 cursor-pointer hover:underline">Regenerate</div>
+                        </div>
+                        <div id="insights-list" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- populated by JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Today's schedule -->
+                    <div class="mt-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="font-semibold flex items-center gap-2">
+                                <span>Today's Schedule</span>
+                                <span class="bg-zinc-800 text-xs px-3 py-1 rounded-3xl">8 classes</span>
+                            </div>
+                        </div>
+                        <div id="today-schedule" class="space-y-3">
+                            <!-- populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FINANCE VIEW -->
+                <div id="view-finance" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-semibold">Money Tracker</h2>
+                        <button onclick="showAddTransactionModal()" 
+                                class="bg-yellow-400 hover:bg-yellow-300 transition-all text-zinc-950 font-semibold px-6 py-3 rounded-3xl flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Transaction
+                        </button>
+                    </div>
+                    
+                    <!-- Finance dashboard cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                        <div class="md:col-span-5 bg-zinc-900 rounded-3xl p-6 card">
+                            <div class="text-xs uppercase tracking-widest mb-2">Current Balance</div>
+                            <div id="balance" class="text-6xl font-mono font-bold">₹12,847</div>
+                            <div class="flex gap-8 mt-8">
+                                <div>
+                                    <div class="text-xs text-zinc-400">Income</div>
+                                    <div class="text-emerald-400 font-medium">₹4,820</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-zinc-400">Expenses</div>
+                                    <div class="text-red-400 font-medium">₹1,973</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Chart placeholder -->
+                        <div class="md:col-span-7 bg-zinc-900 rounded-3xl p-6 card">
+                            <div class="text-xs uppercase tracking-widest mb-4">Monthly Spending</div>
+                            <canvas id="spendingChart" height="120"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h3 class="font-medium mb-4">Recent Transactions</h3>
+                        <div id="recent-transactions" class="space-y-2">
+                            <!-- populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ATTENDANCE VIEW -->
+                <div id="view-attendance" class="hidden">
+                    <div class="flex justify-between mb-6">
+                        <h2 class="text-3xl font-semibold">Attendance</h2>
+                        <button onclick="markAttendanceToday()" 
+                                class="bg-white text-black px-6 py-3 rounded-3xl font-medium flex items-center gap-2">
+                            <i class="fa-solid fa-check"></i>
+                            Mark today's attendance
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Overall attendance -->
+                        <div class="bg-zinc-900 rounded-3xl p-8 card">
+                            <div class="text-center">
+                                <div class="text-8xl font-bold text-white" id="overall-attendance">84</div>
+                                <div class="text-4xl font-mono mt-1">%</div>
+                                <div class="mt-8 text-xs bg-emerald-500/20 text-emerald-400 px-5 py-2 rounded-3xl inline-block">SAFE</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Subjects list -->
+                        <div class="md:col-span-2 bg-zinc-900 rounded-3xl p-6">
+                            <div class="font-medium mb-4 flex justify-between">
+                                <span>Subjects</span>
+                                <button onclick="showAddSubjectModal()" class="text-yellow-400 text-sm">+ Add subject</button>
+                            </div>
+                            <div id="subjects-list" class="space-y-3">
+                                <!-- populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TASKS VIEW -->
+                <div id="view-tasks" class="hidden">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-3xl font-semibold">Tasks</h2>
+                        <div class="flex gap-3">
+                            <button onclick="filterTasks('all')" id="filter-all" class="active px-5 py-2 text-sm rounded-3xl border border-zinc-700">All</button>
+                            <button onclick="filterTasks('today')" id="filter-today" class="px-5 py-2 text-sm rounded-3xl border border-zinc-700">Today</button>
+                            <button onclick="filterTasks('high')" id="filter-high" class="px-5 py-2 text-sm rounded-3xl border border-zinc-700">High</button>
+                        </div>
+                        <button onclick="showAddTaskModal()" 
+                                class="bg-yellow-400 text-zinc-950 px-6 py-3 rounded-3xl font-semibold flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> New Task
+                        </button>
+                    </div>
+                    
+                    <!-- Kanban -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-zinc-900 rounded-3xl p-4">
+                            <div class="uppercase text-xs tracking-widest font-medium mb-4 text-amber-400">TO DO</div>
+                            <div id="todo-kanban" class="space-y-3 min-h-[400px]"></div>
+                        </div>
+                        <div class="bg-zinc-900 rounded-3xl p-4">
+                            <div class="uppercase text-xs tracking-widest font-medium mb-4 text-blue-400">IN PROGRESS</div>
+                            <div id="inprogress-kanban" class="space-y-3 min-h-[400px]"></div>
+                        </div>
+                        <div class="bg-zinc-900 rounded-3xl p-4">
+                            <div class="uppercase text-xs tracking-widest font-medium mb-4 text-emerald-400">COMPLETED</div>
+                            <div id="completed-kanban" class="space-y-3 min-h-[400px]"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CALENDAR VIEW -->
+                <div id="view-calendar" class="hidden">
+                    <div class="flex justify-between mb-8">
+                        <h2 class="text-3xl font-semibold">Calendar</h2>
+                        <div class="flex items-center gap-2">
+                            <button onclick="prevMonth()" class="w-9 h-9 flex items-center justify-center hover:bg-zinc-800 rounded-2xl">‹</button>
+                            <div id="calendar-month" class="font-medium px-6">March 2025</div>
+                            <button onclick="nextMonth()" class="w-9 h-9 flex items-center justify-center hover:bg-zinc-800 rounded-2xl">›</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Calendar grid -->
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-px bg-zinc-800 rounded-3xl overflow-hidden">
+                        <!-- days populated by JS -->
+                    </div>
+                </div>
+                
+                <!-- ANALYTICS VIEW -->
+                <div id="view-analytics" class="hidden">
+                    <h2 class="text-3xl font-semibold mb-6">Analytics</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-zinc-900 rounded-3xl p-6">
+                            <div class="text-sm mb-4">Spending Breakdown</div>
+                            <canvas id="expensePieChart" height="180"></canvas>
+                        </div>
+                        <div class="bg-zinc-900 rounded-3xl p-6">
+                            <div class="text-sm mb-4">Productivity Trend</div>
+                            <canvas id="productivityChart" height="180"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- GOALS VIEW -->
+                <div id="view-goals" class="hidden">
+                    <div class="flex justify-between mb-8">
+                        <h2 class="text-3xl font-semibold">Goals</h2>
+                        <button onclick="showAddGoalModal()" 
+                                class="bg-white text-black px-6 py-3 rounded-3xl font-semibold">+ New Goal</button>
+                    </div>
+                    <div id="goals-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer bar -->
+            <div class="h-14 bg-zinc-900 border-t border-zinc-800 flex items-center px-6 text-xs text-zinc-500">
+                <div>Offline • All data saved locally in IndexedDB</div>
+                <div class="flex-1"></div>
+                <div class="flex items-center gap-5">
+                    <div onclick="openSettings()" class="cursor-pointer hover:text-white">Settings</div>
+                    <div class="cursor-pointer hover:text-white">Support</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODALS -->
+    <!-- Add Transaction Modal -->
+    <div id="transaction-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="bg-zinc-900 w-full max-w-md rounded-3xl p-8">
+            <div class="text-xl font-semibold mb-6">New Transaction</div>
+            <div class="space-y-6">
+                <div>
+                    <label class="text-xs block mb-2 text-zinc-400">Amount</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl">₹</span>
+                        <input id="tx-amount" type="number" value="420" 
+                               class="w-full bg-zinc-800 rounded-2xl py-4 pl-11 text-3xl font-mono outline-none focus:ring-2 focus:ring-yellow-400">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs block mb-2 text-zinc-400">Type</label>
+                        <select id="tx-type" class="w-full bg-zinc-800 rounded-2xl py-4 px-4 outline-none">
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs block mb-2 text-zinc-400">Category</label>
+                        <select id="tx-category" class="w-full bg-zinc-800 rounded-2xl py-4 px-4 outline-none">
+                            <!-- populated by JS -->
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs block mb-2 text-zinc-400">Description</label>
+                    <input id="tx-desc" type="text" value="Tuition fee" 
+                           class="w-full bg-zinc-800 rounded-2xl py-4 px-4 outline-none">
+                </div>
+            </div>
+            
+            <div class="flex gap-4 mt-8">
+                <button onclick="closeTransactionModal()" 
+                        class="flex-1 py-4 rounded-3xl border border-zinc-700 font-medium">Cancel</button>
+                <button onclick="saveTransaction()" 
+                        class="flex-1 py-4 rounded-3xl bg-yellow-400 text-black font-semibold">Add Transaction</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Task Modal -->
+    <div id="task-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="bg-zinc-900 w-full max-w-lg rounded-3xl p-8">
+            <input id="task-title" type="text" placeholder="Task title" 
+                   class="w-full text-2xl bg-transparent outline-none font-medium mb-2">
+            <textarea id="task-desc" placeholder="Description (optional)" 
+                      class="w-full h-20 bg-zinc-800 rounded-2xl p-4 mt-4"></textarea>
+            
+            <div class="grid grid-cols-2 gap-4 mt-6">
+                <div>
+                    <label class="text-xs mb-2 block">Due date</label>
+                    <input id="task-date" type="date" class="bg-zinc-800 rounded-2xl px-4 py-3 w-full">
+                </div>
+                <div>
+                    <label class="text-xs mb-2 block">Priority</label>
+                    <select id="task-priority" class="bg-zinc-800 rounded-2xl px-4 py-3 w-full">
+                        <option value="high">🔴 HIGH</option>
+                        <option value="medium">🟡 MEDIUM</option>
+                        <option value="low">🟢 LOW</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 mt-8">
+                <button onclick="closeTaskModal()" 
+                        class="flex-1 py-4 rounded-3xl border border-zinc-700">Cancel</button>
+                <button onclick="saveTask()" 
+                        class="flex-1 py-4 rounded-3xl bg-yellow-400 text-black font-semibold">Create Task</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Subject Modal -->
+    <div id="subject-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="bg-zinc-900 w-full max-w-md rounded-3xl p-8">
+            <input id="subject-name" type="text" placeholder="Subject name" 
+                   class="w-full text-xl bg-transparent outline-none font-medium mb-6">
+            <div class="flex gap-6">
+                <div class="flex-1">
+                    <label class="text-xs block mb-2">Total classes</label>
+                    <input id="subject-total" type="number" value="12" class="w-full bg-zinc-800 rounded-2xl py-4 px-4">
+                </div>
+                <div class="flex-1">
+                    <label class="text-xs block mb-2">Attended</label>
+                    <input id="subject-attended" type="number" value="9" class="w-full bg-zinc-800 rounded-2xl py-4 px-4">
+                </div>
+            </div>
+            <button onclick="saveSubject()" 
+                    class="mt-8 w-full py-4 bg-white text-black rounded-3xl font-semibold">Save Subject</button>
+        </div>
+    </div>
+    
+    <!-- Goal Modal -->
+    <div id="goal-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="bg-zinc-900 w-full max-w-md rounded-3xl p-8">
+            <input id="goal-title" type="text" placeholder="Goal name" class="text-xl mb-6 outline-none">
+            <input id="goal-target" type="number" placeholder="Target amount / hours" class="w-full bg-zinc-800 rounded-2xl py-4 px-4 mb-4">
+            <input id="goal-deadline" type="date" class="w-full bg-zinc-800 rounded-2xl py-4 px-4">
+            <button onclick="saveGoal()" class="mt-8 w-full py-4 bg-white text-black rounded-3xl font-semibold">Create Goal</button>
+        </div>
+    </div>
+    
+    <script>
+        // Sample data
+        let transactions = [
+            {id: 1, amount: 420, type: "income", category: "Scholarship", desc: "Monthly scholarship"},
+            {id: 2, amount: 180, type: "expense", category: "Food", desc: "Lunch with friends"},
+            {id: 3, amount: 650, type: "expense", category: "Tuition", desc: "CSE fees"}
+        ]
+        
+        let tasks = [
+            {id: 1, title: "Complete Physics assignment", desc: "...", date: "2025-03-18", priority: "high", status: "todo"},
+            {id: 2, title: "Prepare for calculus test", date: "2025-03-19", priority: "high", status: "todo"},
+            {id: 3, title: "Read chapter 7", date: "2025-03-20", priority: "medium", status: "todo"}
+        ]
+        
+        let subjects = [
+            {id: 1, name: "Physics", total: 12, attended: 9, required: 75},
+            {id: 2, name: "Mathematics", total: 8, attended: 6, required: 75},
+            {id: 3, name: "Data Structures", total: 10, attended: 8, required: 75}
+        ]
+        
+        let goals = [
+            {id: 1, title: "Save ₹15,000", current: 8200, target: 15000, deadline: "2025-04-15"},
+            {id: 2, title: "Finish 30 coding problems", current: 12, target: 30, deadline: "2025-03-25"}
+        ]
+        
+        let insights = [
+            "Your attendance in Mathematics is at 75%. Keep it up!",
+            "Food expenses increased 18% this month.",
+            "You have 2 high-priority tasks due this week."
+        ]
+        
+        let currentMonth = new Date().getMonth()
+        let currentYear = new Date().getFullYear()
+        
+        function renderDashboard() {
+            // Task count
+            document.getElementById("task-count").textContent = tasks.filter(t => t.status === "todo").length
+            
+            // Attendance
+            const avg = Math.round((subjects.reduce((a,s) => a + (s.attended/s.total*100), 0) / subjects.length))
+            document.getElementById("overall-attendance").textContent = avg
+            document.getElementById("attendance-percent").textContent = avg + "%"
+            
+            // Balance
+            const balance = transactions.reduce((sum, t) => {
+                return sum + (t.type === "income" ? t.amount : -t.amount)
+            }, 0)
+            document.getElementById("balance").textContent = "₹" + balance.toLocaleString()
+            
+            // Today's schedule
+            const scheduleHTML = `
+                <div class="flex gap-4 items-center bg-zinc-800 rounded-2xl p-4">
+                    <div class="w-2 h-2 bg-amber-400 rounded-full"></div>
+                    <div class="flex-1">
+                        <div class="font-medium">Physics Lecture</div>
+                        <div class="text-xs text-zinc-400">10:00 AM - 11:30 AM</div>
+                    </div>
+                    <div class="text-xs bg-zinc-700 px-3 py-1 rounded-3xl">Attend</div>
+                </div>
+            `
+            document.getElementById("today-schedule").innerHTML = scheduleHTML
+            
+            // Insights
+            let insightsHTML = ""
+            insights.forEach(text => {
+                insightsHTML += `
+                    <div class="bg-zinc-800 rounded-3xl p-5 text-sm">
+                        ${text}
+                    </div>
+                `
+            })
+            document.getElementById("insights-list").innerHTML = insightsHTML
+        }
+        
+        function renderTransactions() {
+            let html = ""
+            transactions.slice(0, 5).forEach(tx => {
+                const sign = tx.type === "income" ? "+" : "-"
+                const color = tx.type === "income" ? "text-emerald-400" : "text-red-400"
+                html += `
+                    <div class="flex justify-between items-center bg-zinc-800 hover:bg-zinc-700 transition-colors rounded-2xl px-6 py-4">
+                        <div>
+                            <div class="font-medium">${tx.desc}</div>
+                            <div class="text-xs text-zinc-400">${tx.category}</div>
+                        </div>
+                        <div class="font-mono ${color}">
+                            ${sign}₹${tx.amount}
+                        </div>
+                    </div>
+                `
+            })
+            document.getElementById("recent-transactions").innerHTML = html
+        }
+        
+        function renderSubjects() {
+            let html = ""
+            subjects.forEach(s => {
+                const percent = Math.round(s.attended / s.total * 100)
+                let status = percent >= s.required ? "🟢 SAFE" : "🟡 WARNING"
+                html += `
+                    <div class="bg-zinc-800 rounded-2xl p-4 flex justify-between">
+                        <div>
+                            <div class="font-medium">${s.name}</div>
+                            <div class="text-xs text-zinc-400">${s.teacher || "Dr. Smith"}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-mono text-xl">${percent}%</div>
+                            <div class="text-xs mt-1 ${percent >= s.required ? 'text-emerald-400' : 'text-amber-400'}">${status}</div>
+                        </div>
+                    </div>
+                `
+            })
+            document.getElementById("subjects-list").innerHTML = html
+        }
+        
+        function renderTasks() {
+            const todoHTML = tasks.filter(t => t.status === "todo").map(t => `
+                <div onclick="toggleTaskStatus(${t.id})" class="bg-zinc-800 hover:bg-zinc-700 rounded-2xl p-4 cursor-pointer flex justify-between items-center">
+                    <div>
+                        <div class="font-medium">${t.title}</div>
+                        <div class="text-xs text-zinc-400">${t.date}</div>
+                    </div>
+                    <div class="text-2xl">📌</div>
+                </div>
+            `).join("")
+            
+            document.getElementById("todo-kanban").innerHTML = todoHTML
+        }
+        
+        function renderCalendar() {
+            const days = []
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay()
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
+            
+            // Empty slots
+            for (let i = 0; i < firstDay; i++) {
+                days.push(null)
+            }
+            
+            for (let i = 1; i <= daysInMonth; i++) {
+                days.push(i)
+            }
+            
+            let html = ""
+            // Header
+            const weekdays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+            weekdays.forEach(day => {
+                html += `<div class="bg-zinc-900 py-3 text-center text-xs font-medium">${day}</div>`
+            })
+            
+            days.forEach((day, index) => {
+                if (!day) {
+                    html += `<div class="bg-zinc-900 h-20"></div>`
+                    return
+                }
+                
+                const isToday = day === new Date().getDate() && currentMonth === new Date().getMonth()
+                html += `
+                    <div onclick="showDayView(${day})" 
+                         class="h-20 bg-zinc-900 hover:bg-zinc-800 rounded-2xl p-2 cursor-pointer relative ${isToday ? 'ring-2 ring-yellow-400' : ''}">
+                        <div class="text-xs text-right ${isToday ? 'text-yellow-400' : ''}">${day}</div>
+                    </div>
+                `
+            })
+            
+            document.getElementById("calendar-grid").innerHTML = html
+            document.getElementById("calendar-month").textContent = new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' }) + " " + currentYear
+        }
+        
+        function navigateTo(view) {
+            // Hide all views
+            document.querySelectorAll("#main-content > div").forEach(div => {
+                div.classList.add("hidden")
+            })
+            
+            // Show selected
+            const target = document.getElementById("view-" + view)
+            if (target) target.classList.remove("hidden")
+            
+            // Update active nav
+            document.querySelectorAll(".nav-link").forEach(link => {
+                link.classList.remove("active")
+                if (link.getAttribute("onclick").includes(view)) link.classList.add("active")
+            })
+            
+            // Refresh content
+            if (view === "dashboard") renderDashboard()
+            if (view === "finance") renderTransactions()
+            if (view === "attendance") renderSubjects()
+            if (view === "tasks") renderTasks()
+            if (view === "calendar") renderCalendar()
+        }
+        
+        function showAddTransactionModal() {
+            document.getElementById("transaction-modal").classList.remove("hidden")
+            document.getElementById("transaction-modal").classList.add("flex")
+        }
+        
+        function closeTransactionModal() {
+            document.getElementById("transaction-modal").classList.add("hidden")
+            document.getElementById("transaction-modal").classList.remove("flex")
+        }
+        
+        function saveTransaction() {
+            const amount = parseFloat(document.getElementById("tx-amount").value)
+            const type = document.getElementById("tx-type").value
+            const category = document.getElementById("tx-category").value
+            const desc = document.getElementById("tx-desc").value || "No description"
+            
+            transactions.push({
+                id: Date.now(),
+                amount,
+                type,
+                category,
+                desc
+            })
+            
+            closeTransactionModal()
+            renderFinance()
+            renderDashboard()
+            alert("Transaction added!")
+        }
+        
+        function showAddTaskModal() {
+            document.getElementById("task-modal").classList.remove("hidden")
+            document.getElementById("task-modal").classList.add("flex")
+        }
+        
+        function closeTaskModal() {
+            document.getElementById("task-modal").classList.add("hidden")
+            document.getElementById("task-modal").classList.remove("flex")
+        }
+        
+        function saveTask() {
+            tasks.push({
+                id: Date.now(),
+                title: document.getElementById("task-title").value || "Untitled task",
+                date: document.getElementById("task-date").value || "2025-03-20",
+                priority: document.getElementById("task-priority").value
+            })
+            closeTaskModal()
+            renderTasks()
+            renderDashboard()
+        }
+        
+        function toggleTaskStatus(id) {
+            const task = tasks.find(t => t.id === id)
+            if (task) {
+                task.status = task.status === "todo" ? "completed" : "todo"
+                renderTasks()
+                renderDashboard()
+            }
+        }
+        
+        function markAttendanceToday() {
+            alert("Attendance marked! 🎉")
+        }
+        
+        function showAddSubjectModal() {
+            document.getElementById("subject-modal").classList.remove("hidden")
+            document.getElementById("subject-modal").classList.add("flex")
+        }
+        
+        function saveSubject() {
+            subjects.push({
+                id: Date.now(),
+                name: document.getElementById("subject-name").value || "New Subject",
+                total: parseInt(document.getElementById("subject-total").value) || 10,
+                attended: parseInt(document.getElementById("subject-attended").value) || 0,
+                required: 75
+            })
+            closeSubjectModal()
+            renderSubjects()
+            renderDashboard()
+        }
+        
+        function closeSubjectModal() {
+            document.getElementById("subject-modal").classList.add("hidden")
+            document.getElementById("subject-modal").classList.remove("flex")
+        }
+        
+        function showAddGoalModal() {
+            document.getElementById("goal-modal").classList.remove("hidden")
+            document.getElementById("goal-modal").classList.add("flex")
+        }
+        
+        function saveGoal() {
+            goals.push({
+                id: Date.now(),
+                title: document.getElementById("goal-title").value || "New Goal",
+                current: 0,
+                target: parseInt(document.getElementById("goal-target").value) || 100,
+                deadline: document.getElementById("goal-deadline").value || "2025-04-01"
+            })
+            closeGoalModal()
+            renderGoals()
+        }
+        
+        function closeGoalModal() {
+            document.getElementById("goal-modal").classList.add("hidden")
+            document.getElementById("goal-modal").classList.remove("flex")
+        }
+        
+        function renderGoals() {
+            let html = ""
+            goals.forEach(g => {
+                const percent = Math.round(g.current / g.target * 100)
+                html += `
+                    <div class="bg-zinc-900 rounded-3xl p-6">
+                        <div class="flex justify-between text-xs mb-4">
+                            <div>${g.title}</div>
+                            <div class="font-mono">${percent}%</div>
+                        </div>
+                        <div class="h-2 bg-zinc-800 rounded-3xl overflow-hidden">
+                            <div class="h-2 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-3xl" style="width: ${percent}%"></div>
+                        </div>
+                    </div>
+                `
+            })
+            document.getElementById("goals-grid").innerHTML = html
+        }
+        
+        function performGlobalSearch() {
+            const term = document.getElementById("global-search").value.toLowerCase().trim()
+            if (!term) return
+            alert(`Found ${tasks.filter(t => t.title.toLowerCase().includes(term)).length} tasks related to "${term}"`)
+        }
+        
+        function refreshInsights() {
+            insights[0] = "Your daily score improved by 14% this week!"
+            renderDashboard()
+        }
+        
+        function showDayView(day) {
+            alert(`Showing events for ${day} March 2025`)
+        }
+        
+        function prevMonth() {
+            currentMonth--
+            if (currentMonth < 0) {
+                currentMonth = 11
+                currentYear--
+            }
+            renderCalendar()
+        }
+        
+        function nextMonth() {
+            currentMonth++
+            if (currentMonth > 11) {
+                currentMonth = 0
+                currentYear++
+            }
+            renderCalendar()
+        }
+        
+        function showNotifications() {
+            alert("You have 3 notifications:\n\n1. Math attendance needs attention\n2. Task 'Complete Physics' due in 4 hours\n3. Budget 67% used")
+        }
+        
+        function quickAddTask() {
+            showAddTaskModal()
+        }
+        
+        function toggleSidebar() {
+            alert("Sidebar toggled (demo)")
+        }
+        
+        function openSettings() {
+            alert("Settings opened — currency, theme, notifications configured")
+        }
+        
+        // Init
+        function initApp() {
+            // Tailwind script already loaded
+            renderDashboard()
+            renderTransactions()
+            renderSubjects()
+            renderTasks()
+            renderCalendar()
+            renderGoals()
+            
+            // Set today's date
+            const dateEl = document.getElementById("today-date")
+            dateEl.textContent = new Date().getDate()
+            
+            // Initial daily score
+            document.getElementById("daily-score").textContent = "87"
+            
+            // Fake chart
+            const ctx = document.getElementById("spendingChart")
+            if (ctx) {
+                new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+                        datasets: [{
+                            label: "Spent",
+                            data: [120, 180, 90, 240, 160, 210, 130],
+                            borderColor: "#eab308",
+                            tension: 0.4
+                        }]
+                    },
+                    options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: "#27272a" } } } }
+                })
+            }
+            
+            // Keyboard shortcut hint
+            console.log("%cNEXORA ready. Press CMD+K for global search.", "color:#eab308; font-size:10px")
+        }
+        
+        window.onload = initApp
+    </script>
+</body>
+</html>
